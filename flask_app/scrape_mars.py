@@ -18,7 +18,7 @@ def request_soup(url):
     response = requests.get(url)
     # Create BeautifulSoup object and parse with html
     soup = BeautifulSoup(response.text, 'html.parser')
-
+    
     return soup
 
 # Opens up the Chrome Dash
@@ -45,20 +45,16 @@ def scrape_info():
 
     ##########################################################
     # JPL Mars Space Image
-    # Tell the browser to click on the image to get the full picture from the JPL website
+    # Click into the chromedriver and select Full image and more info
     browser = init_browser()
     browser.visit(urls['image'])
     browser.click_link_by_partial_text('FULL IMAGE')
     browser.click_link_by_partial_text('more info')
 
-    # Create BeautifulSoup object since we are now on the correct page
+    # Use Beautiful Soup
     html = browser.html
     soup = BeautifulSoup(html, 'html.parser')
-
-    # Parse the soup Object
     featured_img = soup.find('figure', class_='lede')
-
-    # Modify relative url from src to aboslute url
     featured_img_url = f'https://www.jpl.nasa.gov{featured_img.a.img["src"]}'
 
 
@@ -87,12 +83,12 @@ def scrape_info():
     soup = BeautifulSoup(html, 'html.parser')
 
     # Get the html titles and put into a list
-    title_list = soup.find_all('div', class_='description')
+    title = soup.find_all('div', class_='description')
 
     # Loop through the 'div' objects and scrape the titles and urls of images
     # Create a list to store the dictionaries
     hemis_urls = []
-    for title in title_list:
+    for title in titled:
         # Navigate browser to page then click on title link to image page
         browser.visit(urls['hemi'])
         browser.click_link_by_partial_text(title.a.h3.text)
